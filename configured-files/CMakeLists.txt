@@ -1,0 +1,1 @@
+configure_file("config.hpp.in" "${CMAKE_BINARY_DIR}/configured-files/include/internal-use-only/config.hpp" ESCAPE_QUOTES)

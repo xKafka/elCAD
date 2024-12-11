@@ -1,0 +1,18 @@
+#ifndef PROJECT_CAM_CONFIG_HPP
+#define PROJECT_CAM_CONFIG_HPP
+
+namespace river::cmake 
+{
+	static constexpr const char* ProjectName{ "@PROJECT_NAME@" };
+	
+	static constexpr const char* ProjectVersion{ "@PROJECT_VERSION@" };
+	
+	static constexpr const char* GitSha{ "@GIT_SHA@" };
+	
+	static constexpr int ProjectVersionMajor { @PROJECT_VERSION_MAJOR@ };
+	static constexpr int ProjectVersionMinor { @PROJECT_VERSION_MINOR@ };
+	static constexpr int ProjectVersionPatch { @PROJECT_VERSION_PATCH@ };
+	static constexpr int ProjectVersionTweak { @PROJECT_VERSION_TWEAK@ };
+}
+
+#endif
