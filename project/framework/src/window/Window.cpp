@@ -57,6 +57,11 @@ namespace elcad::win
 			return m_height;
 		}
 
+		[[nodiscard]] inline auto getGlfwHandler() const -> const GLFWwindow*
+		{
+			return m_glfw;
+		}
+
 		static auto requiredVulkanInstanceExtensions() -> Vec<const char*>;
 
 	private:
@@ -367,6 +372,11 @@ namespace elcad::win
 	auto Window::canQueuePresent(const vk::Instance& instance, const vk::PhysicalDevice& device, u32 queueFamily) const -> bool
 	{
 		return m_impl->canQueuePresent(instance, device, queueFamily);
+	}
+
+	auto Window::getHandler() const -> const GLFWwindow*
+	{
+		return m_impl->getGlfwHandler();
 	}
 
 	auto Window::requiredVulkanInstanceExtensions() -> Vec<const char*>

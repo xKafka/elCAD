@@ -58,6 +58,10 @@ namespace elcad::renderer
 
 		auto setMainWindow(SPtr<const win::Window> window) -> void;
 
+		auto initImgui(SPtr<const win::Window> window) -> void;
+
+		auto renderWindowUi(SPtr<const win::Window> window, SPtr<const VCommandBuffer> commandBuffer) -> void;
+
 	public:
 		VBackend();
 

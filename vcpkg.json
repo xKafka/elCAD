@@ -42,6 +42,12 @@
     {
       "name": "glfw3",
       "version>=": "3.4#1"
+    },
+
+    {
+      "name": "imgui",
+      "version>=": "1.91.5",
+      "features": [ "vulkan-binding", "glfw-binding", "win32-binding" ]
     }
   ]
 }

@@ -4,6 +4,10 @@
 
 #include <spdlog/spdlog.h>
 
+#include <imgui.h>
+#include <imgui_impl_vulkan.h>
+#include <imgui_impl_glfw.h>
+
 namespace elcad::renderer
 {
 	VBackend::VBackend()
@@ -25,6 +29,66 @@ namespace elcad::renderer
 		initCommandBuffers();
 
 		initSyncObjects();
+		
+		initImgui(window);
+	}
+
+	static vk::DescriptorPool         m_descriptorPool = VK_NULL_HANDLE;
+
+
+	auto VBackend::initImgui(SPtr<const win::Window> window) -> void
+	{
+		auto poolSizes = std::array
+		{
+			vk::DescriptorPoolSize
+			{
+				vk::DescriptorType::eCombinedImageSampler, 1
+			}
+		};
+
+		vk::DescriptorPoolCreateInfo poolInfo
+		{
+			.flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
+			.maxSets = 1,
+			.poolSizeCount = static_cast<u32>(poolSizes.size()),
+			.pPoolSizes = poolSizes.data()
+		};
+
+		m_descriptorPool = m_context->getLogicalDevice()->getVkHandler().createDescriptorPool
+		(
+			poolInfo, *m_context->getAllocator()
+		);
+
+		// Initialize ImGui context
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		(void)io;
+
+		ImGui::StyleColorsDark();
+
+		// Initialize ImGui for GLFW and Vulkan
+		ImGui_ImplGlfw_InitForVulkan(const_cast<GLFWwindow*>(window->getHandler()), true);
+
+		// Vulkan initialization info
+		auto initInfo = ImGui_ImplVulkan_InitInfo{};
+		initInfo.Instance = m_context->getInstance()->getVkHandler();
+		initInfo.PhysicalDevice = m_context->getPhysicalDevice()->getVkHandler();
+		initInfo.Device = m_context->getLogicalDevice()->getVkHandler();
+		initInfo.QueueFamily = m_context->getLogicalDevice()->getGraphicsQueue()->getFamilyIndex();
+		initInfo.Queue = m_context->getLogicalDevice()->getGraphicsQueue()->getVkHandler();
+		initInfo.DescriptorPool = m_descriptorPool;
+		initInfo.Subpass = 0; // Assuming subpass 0 is used for rendering ImGui
+		initInfo.MinImageCount = m_mainWindowSwapChain->getMaxFramesInFlight();
+		initInfo.ImageCount = m_mainWindowSwapChain->getImageCount();
+		initInfo.RenderPass = m_mainRenderPass->getVkHandler();
+		initInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT; // Match your render pass MSAA settings
+		initInfo.CheckVkResultFn = [](VkResult result) {
+			if (result != VK_SUCCESS) {
+				throw std::runtime_error("Vulkan error occurred in ImGui initialization!");
+			}
+			};
+
+		ImGui_ImplVulkan_Init(&initInfo);
 	}
 
 	auto VBackend::setMainWindow(SPtr<const win::Window> window) -> void
@@ -348,6 +412,24 @@ namespace elcad::renderer
 		};
 	}
 
+	auto VBackend::renderWindowUi(SPtr<const win::Window> window, SPtr<const VCommandBuffer> commandBuffer) -> void
+	{
+		ImGui_ImplGlfw_NewFrame();
+
+		ImGui_ImplVulkan_NewFrame();
+
+		ImGui::NewFrame();
+
+		window->render();
+
+		ImGui::Render();
+
+		ImGui_ImplVulkan_RenderDrawData
+		(
+			ImGui::GetDrawData(), commandBuffer->getVkHandler()
+		);
+	}
+
 	auto VBackend::shutdown() -> void
 	{
 		waitIdle();
@@ -440,6 +522,8 @@ namespace elcad::renderer
 		(
 			commandBuffer, m_swapChainFrameBuffers[m_currentImageIndex], offset, extent, clearColor, 1.0f, 0
 		);
+
+		renderWindowUi(m_mainWindow, commandBuffer);
 
 		return true;
 	}

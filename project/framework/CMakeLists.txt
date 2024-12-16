@@ -6,6 +6,8 @@ find_package(spdlog CONFIG REQUIRED)
 
 find_package(glfw3 CONFIG REQUIRED)
 
+find_package(imgui CONFIG REQUIRED)
+
 add_library(elcad_framework STATIC ${sources})
 
 target_include_directories(elcad_framework PUBLIC include PRIVATE src)
@@ -19,4 +21,5 @@ target_link_libraries(elcad_framework PUBLIC elcad_util)
 target_link_libraries(elcad_framework PUBLIC 
 spdlog::spdlog
 glfw
+imgui::imgui
 )

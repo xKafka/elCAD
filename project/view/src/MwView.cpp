@@ -3,12 +3,151 @@
 
 #include <spdlog/spdlog.h>
 
+#include <imgui.h>
+
 namespace elcad::view
 {
+	Button::Button(StringView text)
+		: m_text{ text }
+	{
+	}
+
+	auto Button::render() -> void
+	{
+		ImGui::SetCursorPos
+		(
+			ImVec2{ m_position.x, m_position.y }
+		);
+
+		ImGui::Button
+		(
+			m_text.c_str(), ImVec2{ m_size.x, m_size.y }
+		);
+
+		if (ImGui::IsItemClicked() && m_onClicked)
+		{
+			m_onClicked.value()();
+		}
+
+		if (ImGui::IsItemHovered() && m_onHovered)
+		{
+			m_onHovered.value()();
+		}
+
+		if (ImGui::IsItemFocused() && m_onFocused)
+		{
+			m_onFocused.value()();
+		}
+	}
+
+	auto Button::setText(StringView text) -> void
+	{
+		m_text = std::string{ text };
+	}
+
+	auto Button::setPosition(f32 x, f32 y) -> void
+	{
+		m_position = glm::vec2{ x, y };
+	}
+
+	auto Button::setSize(f32 width, f32 height) -> void
+	{
+		m_size = glm::vec2{ width, height };
+	}
+
+	auto Button::onClicked(std::function<void()> callback) -> void
+	{
+		m_onClicked = callback;
+	}
+
+	auto Button::onHovered(std::function<void()> callback) -> void
+	{
+		m_onHovered = callback;
+	}
+
+	auto Button::onFocused(std::function<void()> callback) -> void
+	{
+		m_onFocused = callback;
+	}
+
 	MwView::MwView()
 		: Window{ "ElCAD", 800, 600 }
 	{
+		auto button1 = makeUnique<Button>("button1");
 
+		button1->setSize(200.0f, 100.0f);
+
+		button1->setPosition(0.0f, 0.0f);
+
+		button1->onClicked
+		(
+			[&]()
+			{
+				spdlog::info("button1 clicked");
+			}
+		);
+
+		button1->onHovered
+		(
+			[&]()
+			{
+				spdlog::info("button1 hovered");
+			}
+		);
+
+		button1->onFocused
+		(
+			[&]()
+			{
+				spdlog::info("button1 focused");
+			}
+		);
+
+		auto button2 = makeUnique<Button>("button2");
+
+		button2->setSize(200.0f, 100.0f);
+
+		button2->setPosition(200.0f, 0.0f);
+
+		button2->onClicked
+		(
+			[&]()
+			{
+				spdlog::info("button2 clicked");
+			}
+		);
+
+		button2->onHovered
+		(
+			[&]()
+			{
+				spdlog::info("button2 hovered");
+			}
+		);
+
+		button2->onFocused
+		(
+			[&]()
+			{
+				spdlog::info("button2 focused");
+			}
+		);
+
+		m_renderables.emplace_back(std::move(button1));
+
+		m_renderables.emplace_back(std::move(button2));
+	}
+
+	auto MwView::render() const -> void
+	{
+		ImGui::Begin("main window");
+
+		for (auto& renderable : m_renderables)
+		{
+			renderable->render();
+		}
+
+		ImGui::End();
 	}
 
 	auto MwView::init(WPtr<ctrl::MwController> ctrl) -> void
