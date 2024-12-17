@@ -9,6 +9,7 @@
 #include "VFrameBuffer.hpp"
 #include "VSemaphore.hpp"
 #include "VFence.hpp"
+#include "VPipelineCache.hpp"
 
 namespace elcad::renderer
 {
@@ -30,6 +31,8 @@ namespace elcad::renderer
 
 		auto initSyncObjects() -> void;
 
+		auto initPipelineCache() -> void;
+
 		auto recreateSwapChain() -> void;
 
 		auto regenerateFramebuffers() -> void;
@@ -45,6 +48,8 @@ namespace elcad::renderer
 		auto destroyFences() -> void;
 
 		auto destroyRenderPass() -> void;
+
+		auto destroyPipelineCache() -> void;
 
 		auto destroySwapChain() -> void;
 
@@ -87,6 +92,8 @@ namespace elcad::renderer
 		SPtr<VSwapChain>			m_mainWindowSwapChain{};
 
 		SPtr<VRenderPass>			m_mainRenderPass{};
+
+		SPtr<VPipelineCache>		m_pipelineCache{};
 
 		Vec<SPtr<VCommandBuffer>>	m_graphicsCommandBuffers{};
 

@@ -1,4 +1,5 @@
 add_subdirectory(ctrl)
+add_subdirectory(model)
 add_subdirectory(framework)
 add_subdirectory(util)
 add_subdirectory(view)

@@ -5,6 +5,7 @@
 
 #include "types/Literal.h"
 #include "types/Format.h"
+#include "types/Math.hpp"
 
 namespace elcad
 {

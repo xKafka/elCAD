@@ -278,6 +278,14 @@ namespace elcad::renderer
         return window->createVulkanSurface(m_vkHandler);
     }
 
+    auto VInstance::destroySurface(const vk::SurfaceKHR& surface) const -> void
+    {
+        m_vkHandler.destroySurfaceKHR
+        (
+            surface, *m_vkAllocator
+        );
+    }
+
     auto VInstance::getVkHandler() const -> const vk::Instance&
     {
         return m_vkHandler;

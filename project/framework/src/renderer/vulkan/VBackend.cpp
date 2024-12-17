@@ -20,6 +20,8 @@ namespace elcad::renderer
 
 		initContext(appName, version);
 
+		initPipelineCache();
+
 		initSwapChain();
 
 		initRenderPass();
@@ -233,6 +235,18 @@ namespace elcad::renderer
 		spdlog::info("Fences created.");
 	}
 
+	auto VBackend::initPipelineCache() -> void
+	{
+		spdlog::info("Creating Pipeline cache...");
+
+		m_pipelineCache = makeShared<VPipelineCache>
+		(
+			m_context->getLogicalDevice(), m_context->getAllocator()
+		);
+
+		spdlog::info("Pipeline cache created.");
+	}
+
 	auto VBackend::initSyncObjects() -> void
 	{
 		spdlog::info("Creating Sync objects...");
@@ -346,6 +360,15 @@ namespace elcad::renderer
 		spdlog::info("RenderPass destroyed");
 	}
 
+	auto VBackend::destroyPipelineCache() -> void
+	{
+		spdlog::info("Destroying Pipeline cache...");
+
+		m_pipelineCache->destroy();
+
+		spdlog::info("Pipeline cache destroyed");
+	}
+
 	auto VBackend::destroySwapChain() -> void
 	{
 		spdlog::info("Destroying SwapChain...");
@@ -358,6 +381,8 @@ namespace elcad::renderer
 	auto VBackend::destroyContext() -> void
 	{
 		spdlog::info("Destroying Context...");
+
+		m_context->getInstance()->destroySurface(m_mainWindowSurface);
 
 		m_context->destroy();
 
@@ -420,7 +445,11 @@ namespace elcad::renderer
 
 		ImGui::NewFrame();
 
+		ImGui::Begin("main window");
+
 		window->render();
+
+		ImGui::End();
 
 		ImGui::Render();
 
@@ -441,6 +470,8 @@ namespace elcad::renderer
 		destroyFrameBuffers();
 
 		destroyCommandBuffers();
+
+		destroyPipelineCache();
 
 		destroyRenderPass();
 

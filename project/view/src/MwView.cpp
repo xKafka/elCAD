@@ -140,14 +140,10 @@ namespace elcad::view
 
 	auto MwView::render() const -> void
 	{
-		ImGui::Begin("main window");
-
 		for (auto& renderable : m_renderables)
 		{
 			renderable->render();
 		}
-
-		ImGui::End();
 	}
 
 	auto MwView::init(WPtr<ctrl::MwController> ctrl) -> void

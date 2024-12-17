@@ -55,6 +55,8 @@ namespace elcad::renderer
 
         auto destroy() -> void;
 
+        auto destroySurface(const vk::SurfaceKHR& surface) const -> void;
+
         [[nodiscard]] auto getVkHandler() const -> const vk::Instance&;
 
         [[nodiscard]] auto loadSurface(SPtr<const win::Window> window) const -> vk::SurfaceKHR;

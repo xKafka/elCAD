@@ -16,7 +16,7 @@ target_include_directories(elcad_framework PRIVATE ${Vulkan_INCLUDE_DIRS})
 
 target_link_libraries(elcad_framework PUBLIC ${Vulkan_LIBRARIES})
 
-target_link_libraries(elcad_framework PUBLIC elcad_util)
+target_link_libraries(elcad_framework PUBLIC elcad_util elcad_model)
 
 target_link_libraries(elcad_framework PUBLIC 
 spdlog::spdlog
