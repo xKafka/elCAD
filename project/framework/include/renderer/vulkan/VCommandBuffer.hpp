@@ -47,7 +47,7 @@ namespace elcad::renderer
 
 		auto allocateAndBeginSingleUse() -> void;
 
-		auto allocateAndEndSingleUse(const vk::Queue& queue) -> void;
+		auto freeAndEndSingleUse(const vk::Queue& queue) -> void;
 
 		[[nodiscard]] auto getVkHandler() const -> const vk::CommandBuffer&;
 

@@ -9,7 +9,10 @@
 #include "VFrameBuffer.hpp"
 #include "VSemaphore.hpp"
 #include "VFence.hpp"
+#include "VPipeline.hpp"
+#include "VPipelineLayout.hpp"
 #include "VPipelineCache.hpp"
+#include "VVertexBuffer.hpp"
 
 namespace elcad::renderer
 {
@@ -33,6 +36,10 @@ namespace elcad::renderer
 
 		auto initPipelineCache() -> void;
 
+		auto initPipelineLayout() -> void;
+
+		auto initPipeline() -> void;
+
 		auto recreateSwapChain() -> void;
 
 		auto regenerateFramebuffers() -> void;
@@ -50,6 +57,10 @@ namespace elcad::renderer
 		auto destroyRenderPass() -> void;
 
 		auto destroyPipelineCache() -> void;
+
+		auto destroyPipelineLayout() -> void;
+
+		auto destroyPipeline() -> void;
 
 		auto destroySwapChain() -> void;
 
@@ -74,6 +85,8 @@ namespace elcad::renderer
 
 		auto init(StringView appName, u32 version, SPtr<const win::Window> window) -> void;
 
+		auto renderTest() -> void;
+
 		auto shutdown() -> void;
 
 		auto resize(u32 width, u32 height) -> void;
@@ -93,6 +106,10 @@ namespace elcad::renderer
 
 		SPtr<VRenderPass>			m_mainRenderPass{};
 
+		SPtr<VPipeline>				m_pipeline{};
+
+		SPtr<VPipelineLayout>		m_pipelineLayout{};
+
 		SPtr<VPipelineCache>		m_pipelineCache{};
 
 		Vec<SPtr<VCommandBuffer>>	m_graphicsCommandBuffers{};
@@ -108,5 +125,7 @@ namespace elcad::renderer
 		u32							m_currentFrame{};
 
 		u32							m_currentImageIndex{};
+
+		Vec<UPtr<VVertexBuffer>>	m_vertexBuffer{};
 	};
 }

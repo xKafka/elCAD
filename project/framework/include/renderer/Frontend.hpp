@@ -28,6 +28,8 @@ namespace elcad::renderer
 
 		auto drawFrame(SPtr<Packet> packet) -> void;
 
+		auto renderTest() -> void;
+
 	private:
 		UPtr<IBackend>	m_backend{};
 

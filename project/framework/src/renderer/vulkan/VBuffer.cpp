@@ -85,7 +85,7 @@ namespace elcad::renderer
 	{
 		return m_logicalDevice->getVkHandler().mapMemory
 		(
-			m_memory, offset, size, {}, *m_vkAllocator
+			m_memory, offset, size, {}
 		);
 	}
 
@@ -95,7 +95,7 @@ namespace elcad::renderer
 		{
 			m_logicalDevice->getVkHandler().unmapMemory
 			(
-				m_memory, *m_vkAllocator
+				m_memory
 			);
 
 			mappedRegion = nullptr;
@@ -106,7 +106,7 @@ namespace elcad::renderer
 	{
 		m_logicalDevice->getVkHandler().bindBufferMemory
 		(
-			m_buffer, m_memory, offset, *m_vkAllocator
+			m_buffer, m_memory, offset
 		);
 	}
 }

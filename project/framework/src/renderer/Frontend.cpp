@@ -46,6 +46,11 @@ namespace elcad::renderer
 		return m_backend->endFrame(0.0);
 	}
 
+	auto Frontend::renderTest() -> void
+	{
+		m_backend->renderTest();
+	}
+
 	auto Frontend::drawFrame(SPtr<Packet> packet) -> void
 	{
 		if (!beginFrame(0.0))

@@ -1,9 +1,6 @@
 #pragma once
 
-#ifndef RUNTIME_ELCAD_H
-#define RUNTIME_ELCAD_H
-
-#include <Types.h>
+#include <util/Types.hpp>
 
 #include <MwController.hpp>
 #include <MwView.hpp>
@@ -28,5 +25,3 @@ namespace elcad::runtime
 		SPtr<view::MwView>			m_mwView{};
 	};
 }
-
-#endif

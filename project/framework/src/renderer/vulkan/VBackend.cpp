@@ -1,6 +1,8 @@
 #include "renderer/vulkan/VBackend.hpp"
+#include "renderer/vulkan/VShader.hpp"
 
 #include <window/Window.hpp>
+#include <model/SystemPaths.hpp>
 
 #include <spdlog/spdlog.h>
 
@@ -20,11 +22,15 @@ namespace elcad::renderer
 
 		initContext(appName, version);
 
-		initPipelineCache();
-
 		initSwapChain();
 
 		initRenderPass();
+
+		initPipelineCache();
+
+		initPipelineLayout();
+
+		initPipeline();
 
 		initFrameBuffers();
 
@@ -33,6 +39,42 @@ namespace elcad::renderer
 		initSyncObjects();
 		
 		initImgui(window);
+	}
+
+	auto VBackend::renderTest() -> void
+	{
+		auto vertices = Vec<model::Vertex>
+		{
+			model::Vertex
+			{
+				.position = { 1.0f,  1.0f, 0.0f }
+			},
+			model::Vertex
+			{
+				.position = { -1.0f,  1.0f, 0.0f }
+			},
+			model::Vertex
+			{
+				.position = { 0.0f, -1.0f, 0.0f }
+			}
+		};
+
+		auto indices = Vec<u32>
+		{
+			0, 1, 2
+		};
+
+		auto buffer = makeUnique<VVertexBuffer>
+		(
+			m_context->getLogicalDevice(), m_context->getAllocator()
+		);
+
+		buffer->create
+		(
+			m_context->getGraphicsPool(), vertices, indices
+		);
+
+		m_vertexBuffer.emplace_back(std::move(buffer));
 	}
 
 	static vk::DescriptorPool         m_descriptorPool = VK_NULL_HANDLE;
@@ -247,6 +289,61 @@ namespace elcad::renderer
 		spdlog::info("Pipeline cache created.");
 	}
 
+	auto VBackend::initPipelineLayout() -> void
+	{
+		spdlog::info("Creating Pipeline layout...");
+
+		m_pipelineLayout = makeShared<VPipelineLayout>
+		(
+			m_context->getLogicalDevice(), m_context->getAllocator()
+		);
+
+		m_pipelineLayout->create();
+
+		spdlog::info("Pipeline layout created.");
+	}
+
+	auto VBackend::initPipeline() -> void
+	{
+		spdlog::info("Creating Pipeline...");
+
+		auto vertexShader = makeShared<VShader>
+		(
+			m_context->getLogicalDevice(), m_context->getAllocator()
+		);
+
+		vertexShader->createFromFile
+		(
+			model::path::getResourcePath("/shaders/simple_vertex.spv")
+		);
+
+		auto fragmentShader = makeShared<VShader>
+		(
+			m_context->getLogicalDevice(), m_context->getAllocator()
+		);
+
+		fragmentShader->createFromFile
+		(
+			model::path::getResourcePath("/shaders/simple_frag.spv")
+		);
+
+		m_pipeline = makeShared<VPipeline>
+		(
+			m_context->getLogicalDevice(), m_context->getAllocator()
+		);
+
+		m_pipeline->create
+		(
+			m_mainRenderPass, m_pipelineCache, m_pipelineLayout, vertexShader, fragmentShader
+		);
+
+		vertexShader->destroy();
+
+		fragmentShader->destroy();
+
+		spdlog::info("Pipeline created.");
+	}
+
 	auto VBackend::initSyncObjects() -> void
 	{
 		spdlog::info("Creating Sync objects...");
@@ -369,6 +466,24 @@ namespace elcad::renderer
 		spdlog::info("Pipeline cache destroyed");
 	}
 
+	auto VBackend::destroyPipelineLayout() -> void
+	{
+		spdlog::info("Destroying Pipeline layout...");
+
+		m_pipelineLayout->destroy();
+
+		spdlog::info("Pipeline layout destroyed");
+	}
+
+	auto VBackend::destroyPipeline() -> void
+	{
+		spdlog::info("Destroying Pipeline...");
+
+		m_pipeline->destroy();
+
+		spdlog::info("Pipeline destroyed");
+	}
+
 	auto VBackend::destroySwapChain() -> void
 	{
 		spdlog::info("Destroying SwapChain...");
@@ -413,12 +528,22 @@ namespace elcad::renderer
 
 		auto height = static_cast<f32>(m_mainWindow->getHeight());
 
+		//return vk::Viewport
+		//{
+		//	.x = 0.0f,
+		//	.y = height,
+		//	.width = width,
+		//	.height = -1.0f * height,
+		//	.minDepth = 0.0f,
+		//	.maxDepth = 1.0f
+		//};
+
 		return vk::Viewport
 		{
 			.x = 0.0f,
-			.y = height,
+			.y = 0.0f,
 			.width = width,
-			.height = -1.0f * height,
+			.height = height,
 			.minDepth = 0.0f,
 			.maxDepth = 1.0f
 		};
@@ -472,6 +597,10 @@ namespace elcad::renderer
 		destroyCommandBuffers();
 
 		destroyPipelineCache();
+
+		destroyPipelineLayout();
+
+		destroyPipeline();
 
 		destroyRenderPass();
 
@@ -533,6 +662,31 @@ namespace elcad::renderer
 
 		commandBuffer->begin(false, false, false);
 
+		const auto offset = glm::ivec2
+		{
+			0, 0 
+		};
+
+		const auto extent = glm::uvec2
+		{ 
+			m_mainWindow->getWidth(), m_mainWindow->getHeight() 
+		};
+
+		const auto clearColor = glm::vec4
+		{
+			0.0f, 0.4f, 0.2f, 1.0f 
+		};
+
+		m_mainRenderPass->begin
+		(
+			commandBuffer, m_swapChainFrameBuffers[m_currentImageIndex], offset, extent, clearColor, 1.0f, 0
+		);
+
+		commandBuffer->getVkHandler().bindPipeline
+		(
+			vk::PipelineBindPoint::eGraphics, m_pipeline->getVkHandler()
+		);
+
 		commandBuffer->getVkHandler().setViewport
 		(
 			0, createWindowViewPort()
@@ -543,15 +697,9 @@ namespace elcad::renderer
 			0, createWindowScissors()
 		);
 
-		const auto offset = glm::ivec2{ 0, 0 };
-
-		const auto extent = glm::uvec2{ m_mainWindow->getWidth(), m_mainWindow->getHeight() };
-
-		const auto clearColor = glm::vec4{ 0.0f, 0.4f, 0.2f, 1.0f };
-
-		m_mainRenderPass->begin
+		commandBuffer->getVkHandler().draw
 		(
-			commandBuffer, m_swapChainFrameBuffers[m_currentImageIndex], offset, extent, clearColor, 1.0f, 0
+			3, 1, 0, 0
 		);
 
 		renderWindowUi(m_mainWindow, commandBuffer);

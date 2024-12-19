@@ -2,7 +2,4 @@
 
 namespace elcad::renderer
 {
-	VAllocationCallbacks::VAllocationCallbacks()
-		: vk::AllocationCallbacks{}
-	{}
 }

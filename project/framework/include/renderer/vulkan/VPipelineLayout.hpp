@@ -12,26 +12,22 @@ namespace elcad::renderer
 
 namespace elcad::renderer
 {
-	class VPipelineCache
+	class VPipelineLayout
 	{
-		auto create() -> void;
-
 	public:
-		VPipelineCache(SPtr<const VLogicalDevice> logicalDevice, SPtr<VAllocationCallbacks> vkAllocator);
+		VPipelineLayout(SPtr<const VLogicalDevice> logicalDevice, SPtr<VAllocationCallbacks> vkAllocator);
 
 		auto destroy() -> void;
 
-		auto wait(u64 timeout) -> bool;
+		auto create() -> void;
 
-		auto reset() -> void;
-
-		[[nodiscard]] auto getVkHandler() const -> const vk::PipelineCache&;
+		[[nodiscard]] auto getVkHandler() const -> const vk::PipelineLayout&;
 
 	private:
 		SPtr<const VLogicalDevice>		m_logicalDevice{};
 
 		SPtr<VAllocationCallbacks>		m_vkAllocator{};
 
-		vk::PipelineCache				m_vkHandler{};
+		vk::PipelineLayout				m_vkHandler{};
 	};
 }

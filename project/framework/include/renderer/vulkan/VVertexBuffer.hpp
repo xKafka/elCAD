@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Types.h>
+#include <util/Types.hpp>
 
 #include "VBuffer.hpp"
 
@@ -8,30 +8,28 @@
 
 namespace elcad::renderer
 {
-	class VCommandBuffer;
+	class VCommandPool;
+	class VQueue;
 }
 
 namespace elcad::renderer
 {
 	class VVertexBuffer
 	{
-		auto create() -> void;
-
 	public:
 		VVertexBuffer(SPtr<const VLogicalDevice> logicalDevice, SPtr<VAllocationCallbacks> vkAllocator);
 
-		auto create(SPtr<const VCommandBuffer> commandBuffer, Span<const model::Vertex> vertices, Span<const u32> indices) -> void;
+		auto create(SPtr<const VCommandPool> commandPool, Span<const model::Vertex> vertices, Span<const u32> indices) -> void;
 
+		auto destroy() -> void;
 
 	private:
-		SPtr<const VLogicalDevice>		m_logicalDevice{};
+		SPtr<const VLogicalDevice>	m_logicalDevice{};
 
-		SPtr<VAllocationCallbacks>		m_vkAllocator{};
+		SPtr<VAllocationCallbacks>	m_vkAllocator{};
 
-		vk::DeviceMemory				m_memory{};
+		UPtr<VBuffer>				m_vertexBuffer{};
 
-		vk::Buffer						m_buffer{};
-
-		void* m_mappedBlock{};
+		UPtr<VBuffer>				m_indexBuffer{};
 	};
 }

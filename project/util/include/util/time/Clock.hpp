@@ -1,10 +1,12 @@
 #pragma	once
 
-#include "Types.h"
+#include "util/types/Basic.hpp"
 
 #include <chrono>
 
-namespace elcad::util
+namespace elcad
+{
+namespace time
 {
 	class Clock
 	{
@@ -29,4 +31,5 @@ namespace elcad::util
 
 		std::chrono::duration<f64>			m_elapsed{};
 	};
+}
 }

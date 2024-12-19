@@ -35,4 +35,9 @@ namespace elcad::renderer
 			createInfo, *m_vkAllocator
 		);
 	}
+
+	auto VPipelineCache::getVkHandler() const -> const vk::PipelineCache&
+	{
+		return m_vkHandler;
+	}
 }

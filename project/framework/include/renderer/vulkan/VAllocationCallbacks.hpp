@@ -6,9 +6,5 @@
 
 namespace elcad::renderer
 {
-	class VAllocationCallbacks : public vk::AllocationCallbacks
-	{
-	public:
-		VAllocationCallbacks();
-	};
+	using VAllocationCallbacks = vk::AllocationCallbacks;
 }

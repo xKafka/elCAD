@@ -42,22 +42,24 @@ namespace elcad::renderer
 			.pColorAttachments = &colorAttReference,
 		};
 
-		//auto dependency = vk::SubpassDependency
-		//{
-		//	.srcSubpass = VK_SUBPASS_EXTERNAL,
-		//	.dstSubpass = 0,
-		//	.srcStageMask = vk::PipelineStageFlagBits::eColorAttachmentOutput,
-		//	.dstStageMask = vk::PipelineStageFlagBits::eColorAttachmentOutput,
-		//	.srcAccessMask = {},
-		//	.dstAccessMask = vk::AccessFlagBits::eColorAttachmentWrite
-		//};
+		auto dependency = vk::SubpassDependency
+		{
+			.srcSubpass = VK_SUBPASS_EXTERNAL,
+			.dstSubpass = 0,
+			.srcStageMask = vk::PipelineStageFlagBits::eColorAttachmentOutput,
+			.dstStageMask = vk::PipelineStageFlagBits::eColorAttachmentOutput,
+			.srcAccessMask = vk::AccessFlagBits::eNone,
+			.dstAccessMask = vk::AccessFlagBits::eColorAttachmentWrite,
+		};
 
 		auto createInfo = vk::RenderPassCreateInfo
 		{
 			.attachmentCount = static_cast<u32>(attachmentDescriptions.size()),
 			.pAttachments = attachmentDescriptions.data(),
 			.subpassCount = 1,
-			.pSubpasses = &subPass
+			.pSubpasses = &subPass,
+			.dependencyCount = 1,
+			.pDependencies = &dependency
 		};
 
 		m_vkHandler = m_logicalDevice->getVkHandler().createRenderPass

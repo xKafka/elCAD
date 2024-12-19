@@ -1,9 +1,6 @@
 #pragma once
 
-#ifndef ELCAD_WINDOW_KEY_H
-#define ELCAD_WINDOW_KEY_H
-
-#include <Types.h>
+#include <util/Types.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -158,5 +155,3 @@ namespace elcad::win
         Middle = GLFW_MOUSE_BUTTON_MIDDLE
     };
 }
-
-#endif

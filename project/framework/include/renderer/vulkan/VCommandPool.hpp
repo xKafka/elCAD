@@ -3,10 +3,10 @@
 #include <functional>
 
 #include "VTypes.hpp"
+#include "VAllocationCallbacks.hpp"
 
 namespace elcad::renderer
 {
-	class VAllocationCallbacks;
 	class VLogicalDevice;
 	class VQueue;
 }

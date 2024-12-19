@@ -83,7 +83,6 @@ namespace elcad::view
 		(
 			[&]()
 			{
-				spdlog::info("button1 clicked");
 			}
 		);
 
@@ -91,7 +90,6 @@ namespace elcad::view
 		(
 			[&]()
 			{
-				spdlog::info("button1 hovered");
 			}
 		);
 
@@ -99,7 +97,6 @@ namespace elcad::view
 		(
 			[&]()
 			{
-				spdlog::info("button1 focused");
 			}
 		);
 
@@ -113,7 +110,7 @@ namespace elcad::view
 		(
 			[&]()
 			{
-				spdlog::info("button2 clicked");
+				m_ctrl.lock()->renderSomething();
 			}
 		);
 
@@ -121,7 +118,6 @@ namespace elcad::view
 		(
 			[&]()
 			{
-				spdlog::info("button2 hovered");
 			}
 		);
 
@@ -129,7 +125,6 @@ namespace elcad::view
 		(
 			[&]()
 			{
-				spdlog::info("button2 focused");
 			}
 		);
 

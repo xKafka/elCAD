@@ -3,8 +3,8 @@
 #include <string>
 #include <memory>
 
-#include <Types.h>
-#include <Clock.hpp>
+#include <util/Types.hpp>
+#include <util/Time.hpp>
 
 #include <renderer/Frontend.hpp>
 
@@ -29,12 +29,14 @@ namespace elcad::ctrl
         auto shutdown() -> void;
 
         auto resize(u32 width, u32 height) -> void;
+        
+        auto renderSomething() -> void;
 
     private:
-        util::Clock         m_clock{};
+        time::Clock                 m_clock{};
 
-        SPtr<view::MwView>  m_mwView{};
+        SPtr<view::MwView>          m_mwView{};
 
-        UPtr<renderer::Frontend>        m_renderer{};
+        UPtr<renderer::Frontend>    m_renderer{};
     };
 }

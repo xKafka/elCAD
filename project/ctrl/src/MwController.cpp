@@ -33,6 +33,11 @@ namespace elcad::ctrl
         m_renderer->resize(width, height);
     }
 
+    auto MwController::renderSomething() -> void
+    {
+        m_renderer->renderTest();
+    }
+
     auto MwController::run() -> void
     {
         m_clock.start();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Types.h>
+#include <util/Types.hpp>
 
 namespace elcad::win
 {
@@ -23,6 +23,8 @@ namespace elcad::renderer
 		virtual auto beginFrame(f32 delta) -> bool = 0;
 
 		virtual auto endFrame(f32 delta) -> bool = 0;
+
+		virtual auto renderTest() -> void = 0;
 	};
 
 	struct Packet

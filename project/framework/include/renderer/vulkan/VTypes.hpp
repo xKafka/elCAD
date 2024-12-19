@@ -3,7 +3,7 @@
 #define VULKAN_HPP_NO_CONSTRUCTORS
 #include <vulkan/vulkan.hpp>
 
-#include <Types.h>
+#include <util/Types.hpp>
 
 namespace elcad::renderer
 {

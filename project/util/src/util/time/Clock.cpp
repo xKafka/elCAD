@@ -1,6 +1,8 @@
-#include "Clock.hpp"
+#include "util/time/Clock.hpp"
 
-namespace elcad::util
+namespace elcad
+{
+namespace time
 {
     Clock::Clock()
         : m_running{ false }
@@ -34,4 +36,5 @@ namespace elcad::util
     {
         m_running = false;
     }
+}
 }

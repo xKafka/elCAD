@@ -113,7 +113,7 @@ namespace elcad::renderer
 		begin(true, false, false);
 	}
 
-	auto VCommandBuffer::allocateAndEndSingleUse(const vk::Queue& queue) -> void
+	auto VCommandBuffer::freeAndEndSingleUse(const vk::Queue& queue) -> void
 	{
 		//end the command buffer
 		end();
