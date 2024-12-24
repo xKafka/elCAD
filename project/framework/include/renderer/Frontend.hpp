@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IBackend.hpp"
+#include "Scene.hpp"
 
 namespace elcad::renderer
 {
@@ -27,6 +28,8 @@ namespace elcad::renderer
 		auto resize(u32 width, u32 height) -> void;
 
 		auto drawFrame(SPtr<Packet> packet) -> void;
+
+		auto renderScene(SPtr<Scene> scene) -> void;
 
 		auto renderTest() -> void;
 

@@ -528,16 +528,6 @@ namespace elcad::renderer
 
 		auto height = static_cast<f32>(m_mainWindow->getHeight());
 
-		//return vk::Viewport
-		//{
-		//	.x = 0.0f,
-		//	.y = height,
-		//	.width = width,
-		//	.height = -1.0f * height,
-		//	.minDepth = 0.0f,
-		//	.maxDepth = 1.0f
-		//};
-
 		return vk::Viewport
 		{
 			.x = 0.0f,
@@ -616,6 +606,45 @@ namespace elcad::renderer
 		if (width > 0 && height > 0)
 		{
 			recreateSwapChain();
+		}
+	}
+
+	auto VBackend::renderCameraNode(const CameraNode& cameraNode) -> void
+	{
+
+	}
+
+	auto VBackend::renderRenderNode(const RenderNode& renderNode) -> void
+	{
+
+	}
+
+	auto VBackend::renderScene(SPtr<Scene> scene) -> void
+	{
+		for (auto& node : scene->getNodes())
+		{
+			std::visit
+			(
+				[self = this](auto&& visitedNode)
+				{
+					using NodeType = std::decay_t<decltype(visitedNode)>;
+
+					if constexpr (std::is_same_v<NodeType, CameraNode>)
+					{
+						self->renderCameraNode(visitedNode);
+					}
+					else if constexpr (std::is_same_v<NodeType, RenderNode>)
+					{
+						self->renderRenderNode(visitedNode);
+					}
+					else
+					{
+						static_assert(always_false<NodeType>::value, "Unhandled node type");
+					}
+				},
+
+				node
+			);
 		}
 	}
 

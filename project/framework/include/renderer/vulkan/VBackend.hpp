@@ -78,6 +78,10 @@ namespace elcad::renderer
 
 		auto renderWindowUi(SPtr<const win::Window> window, SPtr<const VCommandBuffer> commandBuffer) -> void;
 
+		auto renderCameraNode(const CameraNode& cameraNode) -> void;
+
+		auto renderRenderNode(const RenderNode& renderNode) -> void;
+
 	public:
 		VBackend();
 
@@ -94,6 +98,8 @@ namespace elcad::renderer
 		auto beginFrame(f32 delta) -> bool;
 
 		auto endFrame(f32 delta) -> bool;
+
+		auto renderScene(SPtr<Scene> scene) -> void;
 
 	private:
 		SPtr<const win::Window>		m_mainWindow{};

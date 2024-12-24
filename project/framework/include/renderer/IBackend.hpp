@@ -2,6 +2,8 @@
 
 #include <util/Types.hpp>
 
+#include "renderer/Scene.hpp"
+
 namespace elcad::win
 {
 	class Window;
@@ -25,6 +27,8 @@ namespace elcad::renderer
 		virtual auto endFrame(f32 delta) -> bool = 0;
 
 		virtual auto renderTest() -> void = 0;
+
+		virtual auto renderScene(SPtr<Scene> scene) -> void;
 	};
 
 	struct Packet

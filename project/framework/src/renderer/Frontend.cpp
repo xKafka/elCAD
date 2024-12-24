@@ -34,6 +34,22 @@ namespace elcad::renderer
 		m_backend->resize(width, height);
 	}
 
+	auto Frontend::renderScene(SPtr<Scene> scene) -> void
+	{
+		if (!beginFrame(0.0))
+		{
+			return;
+		}
+
+		m_backend->renderScene(scene);
+
+		//we'll not recover from this
+		if (!endFrame(0.0))
+		{
+			throw std::runtime_error{ "renderer end frame failed, Shutting down..." };
+		}
+	}
+
 	auto Frontend::beginFrame(f32 delta) -> bool
 	{
 		return m_backend->beginFrame(delta);
