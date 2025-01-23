@@ -43,7 +43,11 @@ namespace elcad::win
 
 		auto update() -> void;
 
-		auto vulkanSurface(const vk::Instance& instance) const -> vk::SurfaceKHR;
+		auto addRenderable(UPtr<IRenderable> renderable) -> void;
+
+		auto renderRenderables() const -> void;
+
+		auto getVulkanSurface(const vk::Instance& instance) const -> vk::SurfaceKHR;
 
 		auto canQueuePresent(const vk::Instance& instance, const vk::PhysicalDevice& physicalDevice, u32 queueFamily) const -> bool;
 
@@ -65,15 +69,17 @@ namespace elcad::win
 		static auto requiredVulkanInstanceExtensions() -> Vec<const char*>;
 
 	private:
-		Window*				m_parent{};
+		Window*					m_parent{};
 
-		GLFWwindow*			m_glfw{};
+		GLFWwindow*				m_glfw{};
 
-		std::string			m_title{};
+		String					m_title{};
 
-		u32					m_width{}, m_height{};
+		u32						m_width{}, m_height{};
 
-		bool				m_isShown{};
+		bool					m_isShown{};
+
+		Vec<UPtr<IRenderable>>	m_renderables{};
 	};
 
 	Window::Impl::Impl(Window* parent, std::string_view title, u32 width, u32 height)
@@ -276,7 +282,7 @@ namespace elcad::win
 		return glfwGetPhysicalDevicePresentationSupport(instance, physicalDevice, queueFamily) == GLFW_TRUE;
 	}
 
-	auto Window::Impl::vulkanSurface(const vk::Instance& instance) const -> vk::SurfaceKHR
+	auto Window::Impl::getVulkanSurface(const vk::Instance& instance) const -> vk::SurfaceKHR
 	{
 		auto surface = VkSurfaceKHR{};
 
@@ -290,6 +296,22 @@ namespace elcad::win
 		spdlog::info("Vulkan surface created");
 
 		return surface;
+	}
+
+	auto Window::Impl::addRenderable(UPtr<IRenderable> renderable) -> void
+	{
+		m_renderables.emplace_back
+		(
+			std::move(renderable)
+		);
+	}
+
+	auto Window::Impl::renderRenderables() const -> void
+	{
+		for (const auto& renderable : m_renderables)
+		{
+			renderable->render();
+		}
 	}
 
 	auto Window::Impl::requiredVulkanInstanceExtensions() -> Vec<const char*>
@@ -366,12 +388,25 @@ namespace elcad::win
 
 	auto Window::createVulkanSurface(const vk::Instance& instance) const -> vk::SurfaceKHR
 	{
-		return m_impl->vulkanSurface(instance);
+		return m_impl->getVulkanSurface(instance);
 	}
 
 	auto Window::canQueuePresent(const vk::Instance& instance, const vk::PhysicalDevice& device, u32 queueFamily) const -> bool
 	{
 		return m_impl->canQueuePresent(instance, device, queueFamily);
+	}
+
+	auto Window::addRenderable(UPtr<IRenderable> renderable) -> void
+	{
+		m_impl->addRenderable
+		(
+			std::move(renderable)
+		);
+	}
+
+	auto Window::renderRenderables() const -> void
+	{
+		m_impl->renderRenderables();
 	}
 
 	auto Window::getHandler() const -> const GLFWwindow*

@@ -9,3 +9,10 @@ target_link_libraries(elcad_runtime PRIVATE elcad_ctrl elcad_view elcad_util)
 add_custom_command(TARGET elcad_runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${RESOURCE_DIRECTORY} $<TARGET_FILE_DIR:elcad_runtime>/resources
 )
+
+install(
+  TARGETS elcad_runtime
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)

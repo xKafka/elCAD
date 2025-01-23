@@ -1,6 +1,7 @@
 #pragma once
 
 #include <util/Types.hpp>
+#include <system/Executor.hpp>
 
 #include <MwController.hpp>
 #include <MwView.hpp>
@@ -23,5 +24,7 @@ namespace elcad::runtime
 		SPtr<ctrl::MwController>	m_mwCtrl{};
 
 		SPtr<view::MwView>			m_mwView{};
+
+		SPtr<fw::Executor>			m_executors{};
 	};
 }

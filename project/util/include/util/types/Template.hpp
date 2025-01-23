@@ -8,6 +8,8 @@
 #include <array>
 #include <span>
 #include <string>
+#include <functional>
+#include <unordered_map>
 
 #include "Basic.hpp"
 

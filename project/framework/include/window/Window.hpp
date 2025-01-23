@@ -6,6 +6,7 @@
 #include "renderer/vulkan/VContext.hpp"
 
 #include "Key.hpp"
+#include "IRenderable.hpp"
 
 namespace elcad::win
 {
@@ -40,12 +41,13 @@ namespace elcad::win
 
 		auto canQueuePresent(const vk::Instance& instance, const vk::PhysicalDevice& device, u32 queueFamily) const -> bool;
 
+		auto addRenderable(UPtr<IRenderable> renderable) -> void;
+
+		auto renderRenderables() const -> void;
+
 		auto getHandler() const -> const GLFWwindow*;
 
 		static auto requiredVulkanInstanceExtensions() -> Vec<const char*>;
-
-	public:
-		virtual auto render() const -> void = 0;
 
 	protected:
 		virtual auto mousePosChanged(u32 x, u32 y) -> void = 0;

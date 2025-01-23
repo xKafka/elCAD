@@ -3,21 +3,17 @@
 namespace elcad::runtime
 {
 	Elcad::Elcad(i32 argc, const char* argv[])
-		: m_mwCtrl{ makeShared<ctrl::MwController>() }
-		, m_mwView{ makeShared<view::MwView>() }
+		: m_executors{ makeShared<fw::Executor>() }
 	{
-		//auto context = makeShared<renderer::vulkan::Context>("test", 1, true);
+		m_mwCtrl = makeShared<ctrl::MwController>
+		(
+			m_executors
+		);
 
-		//context->setupForWindow(m_mainWindow);
-
-		//auto pipeline = renderer::vulkan::Pipeline
-		//{
-		//	context,
-		//	renderer::vulkan::Shader::fromFile(context, "C:\\Users\\filip\\Documents\\elCAD\\resource\\shaders\\simple_vertex.spv"),
-		//	renderer::vulkan::Shader::fromFile(context, "C:\\Users\\filip\\Documents\\elCAD\\resource\\shaders\\simple_frag.spv")
-		//};
-
-		//auto i = 60;
+		m_mwView = makeShared<view::MwView>
+		(
+			m_executors
+		);
 	}
 
 	Elcad::~Elcad()
@@ -34,6 +30,13 @@ namespace elcad::runtime
 
 	auto Elcad::exec() -> i32
 	{
+		m_executors->start();
+
+		while (true)
+		{
+			m_executors->poll();
+		}
+
 		m_mwCtrl->run();
 
 		return 0;

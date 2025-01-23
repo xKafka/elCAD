@@ -8,6 +8,7 @@ cryptopp/8.9.0
 libzip/1.11.1
 assimp/5.4.2
 gtest/1.15.0
+portable-file-dialogs/0.1.0
 
 [tool_requires]
 cmake/3.22.6

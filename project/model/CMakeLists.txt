@@ -4,8 +4,12 @@ set(CMAKE_AUTORCC ON)
 
 file(GLOB_RECURSE sources "src/*.cpp")
 
+find_package(assimp CONFIG REQUIRED)
+
 add_library(elcad_model STATIC ${sources})
 
 target_include_directories(elcad_model PUBLIC include PRIVATE src)
 
-target_link_libraries(elcad_model PUBLIC elcad_util)
+target_link_libraries(elcad_model PUBLIC elcad_util elcad_framework)
+
+target_link_libraries(elcad_model PRIVATE assimp::assimp)

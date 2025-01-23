@@ -10,6 +10,8 @@ endif()
 
 find_package(glfw3 CONFIG REQUIRED)
 
+find_package(unofficial-nativefiledialog CONFIG REQUIRED)
+
 add_library(elcad_view STATIC ${sources})
 
 target_include_directories(elcad_view PUBLIC include PRIVATE src)
@@ -18,6 +20,7 @@ target_include_directories(elcad_view PUBLIC ${Vulkan_INCLUDE_DIRS})
 
 target_link_libraries(elcad_view PUBLIC 
 glfw
+unofficial::nativefiledialog::nfd
 )
 
 target_link_libraries(elcad_view PUBLIC ${Vulkan_LIBRARIES})

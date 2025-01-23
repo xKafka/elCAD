@@ -1,0 +1,15 @@
+message(STATUS "Conan: Using CMakeDeps conandeps_legacy.cmake aggregator via include()")
+message(STATUS "Conan: It is recommended to use explicit find_package() per dependency instead")
+
+find_package(spdlog)
+find_package(glm)
+find_package(nlohmann_json)
+find_package(cxxopts)
+find_package(cryptopp)
+find_package(libzip)
+find_package(assimp)
+find_package(stb)
+find_package(GTest)
+find_package(portable-file-dialogs)
+
+set(CONANDEPS_LEGACY  spdlog::spdlog  glm::glm  nlohmann_json::nlohmann_json  cxxopts::cxxopts  cryptopp::cryptopp  libzip::zip  assimp::assimp  stb::stb  gtest::gtest  portable-file-dialogs::portable-file-dialogs )
