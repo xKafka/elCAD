@@ -30,7 +30,7 @@ namespace elcad::ctrl
 
         auto run() -> void;
 
-        auto update() -> void;
+        auto poll() -> void;
 
         auto shutdown() -> void;
         
